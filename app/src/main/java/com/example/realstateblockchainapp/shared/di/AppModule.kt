@@ -13,5 +13,5 @@ val appModule = module {
     single { Authenticator(androidContext()) }
     single<PreferencesRepository> { PreferencesRepositoryImpl(androidContext()) }
     viewModel { LoginViewModel(preferencesRepository = get()) }
-    viewModel { HomeViewModel(homeRepository = get()) }
+    viewModel { HomeViewModel(homeUseCase = get()) }
 }

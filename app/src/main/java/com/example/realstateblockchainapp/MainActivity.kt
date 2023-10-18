@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.realstateblockchainapp.features.home.ui.HomePage
 import com.example.realstateblockchainapp.features.login.ui.LoginPage
+import com.example.realstateblockchainapp.features.splash.ui.SplashPage
 import com.example.realstateblockchainapp.shared.navigation.navigate
 import com.example.realstateblockchainapp.shared.preferences.PRIVATE_WALLET_KEY
 import com.example.realstateblockchainapp.shared.preferences.PreferencesRepository
@@ -20,6 +21,7 @@ import com.example.realstateblockchainapp.shared.preferences.USER_EMAIL_KEY
 import com.example.realstateblockchainapp.shared.preferences.USER_NAME_KEY
 import com.example.realstateblockchainapp.shared.utils.NavConstants.HOME_PAGE
 import com.example.realstateblockchainapp.shared.utils.NavConstants.LOGIN_PAGE
+import com.example.realstateblockchainapp.shared.utils.NavConstants.SPLASH_PAGE
 import com.example.realstateblockchainapp.shared.web3.Authenticator
 import com.example.realstateblockchainapp.ui.theme.RealStateBlockchainAppTheme
 import kotlinx.coroutines.launch
@@ -42,42 +44,51 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             LaunchedEffect("sessionKey") {
-                val sessionResponse: CompletableFuture<Void> = authenticator.web3Auth.initialize()
-                sessionResponse.whenComplete { _, error ->
-                    try {
-                        val privateKey = authenticator.web3Auth.getPrivkey()
-                        if (error == null && privateKey.isNotEmpty()) {
-                            lifecycleScope.launch {
-                                preferencesRepository.putString(
-                                    PRIVATE_WALLET_KEY,
-                                    authenticator.web3Auth.getPrivkey()
-                                )
-                                preferencesRepository.putString(
-                                    USER_EMAIL_KEY,
-                                    authenticator.web3Auth.getUserInfo()?.email.orEmpty()
-                                )
-                                preferencesRepository.putString(
-                                    USER_NAME_KEY,
-                                    authenticator.web3Auth.getUserInfo()?.name.orEmpty()
-                                )
-                                navController.navigate(HOME_PAGE) {
-                                    popUpTo(LOGIN_PAGE) { inclusive = true }
+                lifecycleScope.launch {
+                    val sessionResponse: CompletableFuture<Void> =
+                        authenticator.web3Auth.initialize()
+                    sessionResponse.whenComplete { _, error ->
+                        try {
+                            val privateKey = authenticator.web3Auth.getPrivkey()
+                            if (error == null && privateKey.isNotEmpty()) {
+                                lifecycleScope.launch {
+                                    preferencesRepository.putString(
+                                        PRIVATE_WALLET_KEY,
+                                        authenticator.web3Auth.getPrivkey()
+                                    )
+                                    preferencesRepository.putString(
+                                        USER_EMAIL_KEY,
+                                        authenticator.web3Auth.getUserInfo()?.email.orEmpty()
+                                    )
+                                    preferencesRepository.putString(
+                                        USER_NAME_KEY,
+                                        authenticator.web3Auth.getUserInfo()?.name.orEmpty()
+                                    )
+                                    navController.navigate(HOME_PAGE) {
+                                        popUpTo(LOGIN_PAGE) { inclusive = true }
+                                    }
                                 }
+                            } else {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Something went wrong: ${error.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
-                        } else {
-                            Toast.makeText(
-                                applicationContext,
-                                "Something went wrong: ${error.message}",
-                                Toast.LENGTH_LONG
-                            ).show()
+                        } catch (e: Exception) {
+                            Log.d("MainActivity_Web3Auth", e.message ?: "Something went wrong")
                         }
-                    } catch (e: Exception) {
-                        Log.d("MainActivity_Web3Auth", e.message ?: "Something went wrong")
                     }
                 }
             }
             RealStateBlockchainAppTheme {
-                NavHost(navController = navController, startDestination = LOGIN_PAGE) {
+                NavHost(navController = navController, startDestination = SPLASH_PAGE) {
+                    composable(SPLASH_PAGE) {
+                        SplashPage(
+                            preferencesRepository = preferencesRepository,
+                            navController = navController
+                        )
+                    }
                     composable(LOGIN_PAGE) {
                         LoginPage(
                             loginWithProvider = ::loginWithProvider,
