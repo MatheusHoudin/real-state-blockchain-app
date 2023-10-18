@@ -14,22 +14,36 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.realstateblockchainapp.features.login.viewmodel.LoginViewModel
+import com.example.realstateblockchainapp.shared.navigation.NavigationAction
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
-    loginWithProvider: () -> Unit
+    loginWithProvider: () -> Unit,
+    navigate: (NavigationAction) -> Unit
 ) {
+    val loginVm = koinViewModel<LoginViewModel>()
+
+    LaunchedEffect("navigation") {
+        loginVm.navigationAction.collect { navigationAction ->
+            navigate(navigationAction)
+        }
+    }
+
     var privateKeyText by remember { mutableStateOf("") }
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.primary),
     ) {
         Column(
             modifier = Modifier
@@ -56,9 +70,12 @@ fun LoginPage(
             PrivateKeyTextField(privateKeyText) { privateKey ->
                 privateKeyText = privateKey
             }
-            Button(onClick = {
-                loginWithProvider()
-            }) {
+            Spacer(modifier = Modifier.height(14.dp))
+            Button(
+                onClick = {
+                    loginVm.loginWithPrivateKey(privateKeyText)
+                },
+            ) {
                 Text(text = "Authenticate with private key")
             }
         }
@@ -76,14 +93,17 @@ private fun PrivateKeyTextField(
         placeholder = {
             Text("Add your private key here")
         },
-        onValueChange = { onValueChange(it) }
+        onValueChange = { onValueChange(it) },
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = Color.Transparent
+        )
     )
 }
 
 @Preview
 @Composable
 fun LoginPagePreview() {
-    LoginPage {
+    LoginPage({}) {
 
     }
 }

@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.realstateblockchainapp.features.home.ui.HomePage
 import com.example.realstateblockchainapp.features.login.ui.LoginPage
+import com.example.realstateblockchainapp.shared.navigation.navigate
 import com.example.realstateblockchainapp.shared.preferences.PRIVATE_WALLET_KEY
 import com.example.realstateblockchainapp.shared.preferences.PreferencesRepository
 import com.example.realstateblockchainapp.shared.preferences.USER_EMAIL_KEY
@@ -39,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
+
             LaunchedEffect("sessionKey") {
                 val sessionResponse: CompletableFuture<Void> = authenticator.web3Auth.initialize()
                 sessionResponse.whenComplete { _, error ->
@@ -76,7 +78,12 @@ class MainActivity : ComponentActivity() {
             }
             RealStateBlockchainAppTheme {
                 NavHost(navController = navController, startDestination = LOGIN_PAGE) {
-                    composable(LOGIN_PAGE) { LoginPage { loginWithProvider() } }
+                    composable(LOGIN_PAGE) {
+                        LoginPage(
+                            loginWithProvider = ::loginWithProvider,
+                            navigate = navController::navigate
+                        )
+                    }
                     composable(HOME_PAGE) { HomePage() }
                 }
             }

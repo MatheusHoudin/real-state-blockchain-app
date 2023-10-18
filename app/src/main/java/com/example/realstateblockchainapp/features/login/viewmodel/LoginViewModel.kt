@@ -1,16 +1,20 @@
 package com.example.realstateblockchainapp.features.login.viewmodel
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.realstateblockchainapp.shared.BaseViewModel
+import com.example.realstateblockchainapp.shared.navigation.NavigationAction
+import com.example.realstateblockchainapp.shared.preferences.PRIVATE_WALLET_KEY
 import com.example.realstateblockchainapp.shared.preferences.PreferencesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val preferencesRepository: PreferencesRepository
-) : ViewModel() {
+) : BaseViewModel() {
 
     fun loginWithPrivateKey(privateKey: String) {
-        prefe
+        viewModelScope.launch {
+            preferencesRepository.putString(PRIVATE_WALLET_KEY, privateKey)
+            handleNavigation(NavigationAction.NavigateToHomePage)
+        }
     }
 }
