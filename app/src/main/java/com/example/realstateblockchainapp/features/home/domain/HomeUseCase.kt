@@ -2,7 +2,7 @@ package com.example.realstateblockchainapp.features.home.domain
 
 import com.example.realstateblockchainapp.features.home.mapper.HomeNftMapper
 import com.example.realstateblockchainapp.features.home.model.HomeStateModel
-import com.example.realstateblockchainapp.features.home.repository.HomeRepository
+import com.example.realstateblockchainapp.shared.repository.NftRepository
 import com.example.realstateblockchainapp.shared.api.models.RealStateNFTModel
 import com.example.realstateblockchainapp.shared.domain.BaseFlowableUseCase
 import com.example.realstateblockchainapp.shared.domain.Result
@@ -13,16 +13,16 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 
 class HomeUseCase(
-    private val homeRepository: HomeRepository,
+    private val nftRepository: NftRepository,
     private val homeNftMapper: HomeNftMapper
 ) : BaseFlowableUseCase<Unit, HomeStateModel> {
     override fun execute(params: Unit): Flow<Result<HomeStateModel>> =
         flow {
             try {
                 val web3Data =
-                    coroutineScope { async { homeRepository.fetchRealStateNft() }.await() }
+                    coroutineScope { async { nftRepository.fetchRealStateNft() }.await() }
                 val nftsResponse =
-                    coroutineScope { async { homeRepository.fetchAllNfts() }.await() }
+                    coroutineScope { async { nftRepository.fetchAllNfts() }.await() }
 
                 val mappedResponse = homeNftMapper.convert(
                     RealStateNFTModel(

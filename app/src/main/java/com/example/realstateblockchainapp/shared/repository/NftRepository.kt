@@ -1,12 +1,13 @@
-package com.example.realstateblockchainapp.features.home.repository
+package com.example.realstateblockchainapp.shared.repository
 
 import com.example.realstateblockchainapp.shared.api.NFTApi
+import com.example.realstateblockchainapp.shared.api.models.NftDetailsModel
 import com.example.realstateblockchainapp.shared.api.models.NftModel
 import com.example.realstateblockchainapp.shared.api.models.RealStateNft
 import com.example.realstateblockchainapp.shared.preferences.PRIVATE_WALLET_KEY
 import com.example.realstateblockchainapp.shared.preferences.PreferencesRepository
 
-class HomeRepository(
+class NftRepository(
     private val nftApi: NFTApi,
     private val preferencesRepository: PreferencesRepository
 ) {
@@ -16,4 +17,10 @@ class HomeRepository(
 
     suspend fun fetchAllNfts(): List<NftModel> =
         nftApi.getNFTs(preferencesRepository.getString(PRIVATE_WALLET_KEY).orEmpty())
+
+    suspend fun fetchNftDetails(nftId: String): NftDetailsModel =
+        nftApi.getNFTDetails(
+            privateKey = preferencesRepository.getString(PRIVATE_WALLET_KEY).orEmpty(),
+            nftId = nftId
+        )
 }

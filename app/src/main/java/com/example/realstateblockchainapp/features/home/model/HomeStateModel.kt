@@ -10,5 +10,6 @@ data class HomeStateModel(
     val userEthBalance: String = "",
     val contractAddress: String = "",
     val userAddress: String = "",
-    val nfts: List<NftModel> = emptyList()
+    val nfts: List<NftModel> = emptyList(),
+    val nftDetails: NftDetailsDomainModel? = null
 )

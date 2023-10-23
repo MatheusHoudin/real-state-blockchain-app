@@ -1,11 +1,20 @@
 package com.example.realstateblockchainapp.shared.di
 
-import com.example.realstateblockchainapp.features.home.repository.HomeRepository
+import com.example.realstateblockchainapp.shared.repository.CoinRepository
+import com.example.realstateblockchainapp.shared.repository.NftRepository
 import org.koin.dsl.module
 
 val dataModule = module {
-    factory { HomeRepository(
-        nftApi = get(),
-        preferencesRepository = get()
-    ) }
+    factory {
+        NftRepository(
+            nftApi = get(),
+            preferencesRepository = get()
+        )
+    }
+    factory {
+        CoinRepository(
+            coinApi = get(),
+            preferencesRepository = get()
+        )
+    }
 }

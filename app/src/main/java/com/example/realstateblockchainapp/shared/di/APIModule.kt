@@ -1,5 +1,6 @@
 package com.example.realstateblockchainapp.shared.di
 
+import com.example.realstateblockchainapp.shared.api.CoinApi
 import com.example.realstateblockchainapp.shared.api.NFTApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -11,6 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 val networkModule = module {
     factory { provideOkHttpClient() }
     factory { provideNftApi(get()) }
+    factory { provideCoinApi(get()) }
     single { provideRetrofit(get()) }
 }
 
@@ -27,3 +29,5 @@ fun provideOkHttpClient(): OkHttpClient {
 }
 
 fun provideNftApi(retrofit: Retrofit): NFTApi = retrofit.create(NFTApi::class.java)
+
+fun provideCoinApi(retrofit: Retrofit): CoinApi = retrofit.create(CoinApi::class.java)

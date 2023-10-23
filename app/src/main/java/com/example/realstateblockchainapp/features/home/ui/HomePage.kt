@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,8 +25,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -128,6 +131,20 @@ fun HomePage() {
                     }
                 }
                 Spacer(modifier = Modifier.padding(vertical = 16.dp))
+//                val sheetState = rememberModalBottomSheetState()
+//                ModalBottomSheet(
+//                    onDismissRequest = {
+//
+//                    },
+//                    sheetState = sheetState
+//                ) {
+//                    // Sheet content
+//                    Button(onClick = {
+//
+//                    }) {
+//                        Text("Hide bottom sheet")
+//                    }
+//                }
                 LazyColumn(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(
@@ -148,11 +165,13 @@ fun HomePage() {
                     for (nft in state.value.nfts) {
                         if (nft.metadata != null) {
                             item(key = nft.tokenId) {
-                                NftCard(nft = nft)
+                                NftCard(nft = nft) { nftId ->
+                                    homeVm.openNftDetails(nftId)
+                                }
                             }
-                        }
-                        item {
-                            Spacer(modifier = Modifier.padding(vertical = 12.dp))
+                            item {
+                                Spacer(modifier = Modifier.padding(vertical = 12.dp))
+                            }
                         }
                     }
                 }
@@ -162,11 +181,12 @@ fun HomePage() {
 }
 
 @Composable
-private fun NftCard(nft: NftModel) {
+private fun NftCard(nft: NftModel, onClick: (String) -> Unit) {
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.onPrimary
-        )
+        ),
+        modifier = Modifier.clickable { onClick(nft.tokenId) }
     ) {
         nft.metadata?.let {
             Row(
