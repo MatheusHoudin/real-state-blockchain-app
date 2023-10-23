@@ -2,14 +2,9 @@ package com.example.realstateblockchainapp.features.home.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.example.realstateblockchainapp.features.home.domain.HomeUseCase
-import com.example.realstateblockchainapp.features.home.mapper.HomeNftMapper
 import com.example.realstateblockchainapp.features.home.model.HomeStateModel
-import com.example.realstateblockchainapp.features.home.repository.HomeRepository
 import com.example.realstateblockchainapp.shared.BaseViewModel
 import com.example.realstateblockchainapp.shared.domain.Result
-import com.example.realstateblockchainapp.shared.navigation.NavigationAction
-import com.example.realstateblockchainapp.shared.preferences.PRIVATE_WALLET_KEY
-import com.example.realstateblockchainapp.shared.preferences.PreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

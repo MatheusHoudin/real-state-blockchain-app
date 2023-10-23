@@ -5,6 +5,7 @@ data class RealStateNft(
     val contractSymbol: String,
     val nftPrice: String,
     val contractAddress: String,
+    val userEthBalance: String,
     val user: BlockchainUser
 )
 
