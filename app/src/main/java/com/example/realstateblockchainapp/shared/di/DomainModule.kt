@@ -11,7 +11,8 @@ val domainModule = module {
     factory { NftDetailsMapper() }
     factory { HomeUseCase(
         nftRepository = get(),
-        homeNftMapper = get()
+        homeNftMapper = get(),
+        preferencesRepository = get()
     ) }
     factory { GetNftDetailsUseCase(
         nftRepository = get(),

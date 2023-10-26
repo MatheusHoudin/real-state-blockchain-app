@@ -7,6 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 val networkModule = module {
@@ -25,7 +26,13 @@ fun provideOkHttpClient(): OkHttpClient {
     val logging = HttpLoggingInterceptor().apply {
         setLevel(HttpLoggingInterceptor.Level.BODY)
     }
-    return OkHttpClient().newBuilder().addInterceptor(logging).build()
+    return OkHttpClient()
+        .newBuilder()
+        .addInterceptor(logging)
+        .connectTimeout(50, TimeUnit.SECONDS)
+        .writeTimeout(50, TimeUnit.SECONDS)
+        .readTimeout(50, TimeUnit.SECONDS)
+        .build()
 }
 
 fun provideNftApi(retrofit: Retrofit): NFTApi = retrofit.create(NFTApi::class.java)

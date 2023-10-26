@@ -1,9 +1,10 @@
 package com.example.realstateblockchainapp.shared.api.models
 
 data class NftDetailsModel(
+    val nftId: String,
     val coinAddress: String,
     val propertyClient: PropertyClient,
-    val metadata: NftMetadata?
+    val nftData: NftMetadata?
 )
 
 data class PropertyClient(

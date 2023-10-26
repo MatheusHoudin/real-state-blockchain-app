@@ -4,6 +4,7 @@ import com.example.realstateblockchainapp.shared.api.models.NftMetadata
 import com.example.realstateblockchainapp.shared.api.models.PropertyClient
 
 data class NftDetailsDomainModel(
+    val nftId: String = "",
     val isLoading: Boolean = false,
     val coinAddress: String = "",
     val propertyClient: PropertyClient? = null,

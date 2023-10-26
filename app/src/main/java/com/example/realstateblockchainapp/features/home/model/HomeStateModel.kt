@@ -11,5 +11,6 @@ data class HomeStateModel(
     val contractAddress: String = "",
     val userAddress: String = "",
     val nfts: List<NftModel> = emptyList(),
-    val nftDetails: NftDetailsDomainModel? = null
+    val nftDetails: NftDetailsDomainModel? = null,
+    val showBuyCoinDialog: Boolean = false
 )

@@ -34,5 +34,6 @@ class PreferencesRepositoryImpl(
 }
 
 const val PRIVATE_WALLET_KEY = "private_wallet_key"
+const val PUBLIC_WALLET_KEY = "public_wallet_key"
 const val USER_EMAIL_KEY = "user_email_key"
 const val USER_NAME_KEY = "user_name_key"

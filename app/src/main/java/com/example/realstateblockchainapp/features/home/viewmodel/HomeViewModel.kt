@@ -45,6 +45,28 @@ class HomeViewModel(
         }
     }
 
+    fun onCloseNftDetails() {
+        _homeState.value = _homeState.value.copy(
+            nftDetails = null
+        )
+    }
+
+    fun showBuyCoinDialog() {
+        _homeState.value = _homeState.value.copy(
+            showBuyCoinDialog = true
+        )
+    }
+
+    fun hideBuyCoinDialog() {
+        _homeState.value = _homeState.value.copy(
+            showBuyCoinDialog = false
+        )
+    }
+
+    fun buyCoins(coinsQuantity: String) {
+
+    }
+
     fun openNftDetails(nftId: String) {
         viewModelScope.launch {
             getNftDetailsUseCase.execute(nftId).collectLatest { result ->

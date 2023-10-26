@@ -9,12 +9,13 @@ import com.example.realstateblockchainapp.shared.utils.convertWeiToEtherUnit
 
 class NftDetailsMapper : IMapper<FullNftDetailsModel, NftDetailsDomainModel> {
     override fun convert(data: FullNftDetailsModel): NftDetailsDomainModel = NftDetailsDomainModel(
+        nftId = data.nftDetailsModel.nftId,
         coinAddress = "https://sepolia.etherscan.io/address/${data.nftDetailsModel.coinAddress}",
-        propertyClient = PropertyClient(
+        propertyClient = if (data.nftDetailsModel.propertyClient.client != "0x0000000000000000000000000000000000000000") PropertyClient(
             client = "https://sepolia.etherscan.io/address/${data.nftDetailsModel.propertyClient.client}",
             value = convertWeiToEtherUnit(data.nftDetailsModel.propertyClient.value)
-        ),
-        metadata = data.nftDetailsModel.metadata,
+        ) else null,
+        metadata = data.nftDetailsModel.nftData,
         coinDetails = CoinDetailsDomainModel(
             address = "https://sepolia.etherscan.io/address/${data.coinDetails.address}",
             name = data.coinDetails.name,
