@@ -18,5 +18,8 @@ interface CoinApi {
     ): CoinDetails
 
     @POST("/buyCoins")
-    suspend fun buyCoins(@Body request: BuyCoinsRequest): GenericTransactionResponse
+    suspend fun buyCoins(
+        @Header("privateKey") privateKey: String,
+        @Body request: BuyCoinsRequest
+    ): GenericTransactionResponse
 }

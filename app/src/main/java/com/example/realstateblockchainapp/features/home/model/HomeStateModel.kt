@@ -12,5 +12,11 @@ data class HomeStateModel(
     val userAddress: String = "",
     val nfts: List<NftModel> = emptyList(),
     val nftDetails: NftDetailsDomainModel? = null,
-    val showBuyCoinDialog: Boolean = false
+    val buyCoinState: BuyCoinState? = null
+)
+
+data class BuyCoinState(
+    val buyCoinLoading: Boolean = false,
+    val valueInEth: String = "",
+    val resultMessage: String = ""
 )

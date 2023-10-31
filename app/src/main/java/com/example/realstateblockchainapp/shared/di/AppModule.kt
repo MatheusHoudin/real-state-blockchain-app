@@ -13,5 +13,11 @@ val appModule = module {
     single { Authenticator(androidContext()) }
     single<PreferencesRepository> { PreferencesRepositoryImpl(androidContext()) }
     viewModel { LoginViewModel(preferencesRepository = get()) }
-    viewModel { HomeViewModel(homeUseCase = get(), getNftDetailsUseCase = get()) }
+    viewModel {
+        HomeViewModel(
+            homeUseCase = get(),
+            getNftDetailsUseCase = get(),
+            buyCoinsUseCase = get()
+        )
+    }
 }
