@@ -18,15 +18,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -70,11 +71,6 @@ fun HomePage() {
     val homeVm = koinViewModel<HomeViewModel>()
     val state = homeVm.homeState.collectAsState()
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = state.value.isLoading,
-        onRefresh = homeVm::fetchNftData
-    )
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -87,9 +83,7 @@ fun HomePage() {
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary),
         ) {
-            Column(
-                modifier = Modifier.pullRefresh(pullRefreshState)
-            ) {
+            Column {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -109,12 +103,30 @@ fun HomePage() {
                         style = MaterialTheme.typography.titleLarge,
                     )
                     Spacer(modifier = Modifier.padding(vertical = 4.dp))
-                    Text(
-                        text = "My ETH: ${state.value.userEthBalance} ETH",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "My ETH: ${state.value.userEthBalance} ETH",
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        IconButton(
+                            onClick = {
+                                homeVm.fetchNftData()
+                            },
+                        ) {
+                            Icon(
+                                Icons.Default.Refresh,
+                                "",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier
+                                    .background(MaterialTheme.colorScheme.onPrimary)
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.padding(vertical = 4.dp))
                     Text(
                         text = "NFT Price: ${state.value.nftPrice} ETH",
@@ -123,11 +135,6 @@ fun HomePage() {
                     )
                 }
                 Spacer(modifier = Modifier.padding(vertical = 8.dp))
-                PullRefreshIndicator(
-                    refreshing = state.value.isLoading,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly

@@ -21,10 +21,11 @@ fun SplashPage(
         val loggedPrivateKey = preferencesRepository.getString(PRIVATE_WALLET_KEY)
 
         val routeToOpen =
-            if (loggedPrivateKey != null) NavConstants.HOME_PAGE else NavConstants.LOGIN_PAGE
+            if (loggedPrivateKey != null) NavConstants.NAVIGATION_PAGE else NavConstants.LOGIN_PAGE
 
         navController.navigate(routeToOpen) {
             popUpTo(NavConstants.SPLASH_PAGE) { inclusive = true }
+
         }
     }
     Box(

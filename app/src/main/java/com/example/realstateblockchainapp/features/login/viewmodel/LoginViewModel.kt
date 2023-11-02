@@ -14,7 +14,7 @@ class LoginViewModel(
     fun loginWithPrivateKey(privateKey: String) {
         viewModelScope.launch {
             preferencesRepository.putString(PRIVATE_WALLET_KEY, privateKey)
-            handleNavigation(NavigationAction.NavigateToHomePage)
+            handleNavigation(NavigationAction.NavigateToNavigationPage)
         }
     }
 }

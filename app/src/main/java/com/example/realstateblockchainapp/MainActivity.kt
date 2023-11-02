@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.realstateblockchainapp.features.home.ui.HomePage
 import com.example.realstateblockchainapp.features.login.ui.LoginPage
+import com.example.realstateblockchainapp.features.navigation.ui.NavigationPage
 import com.example.realstateblockchainapp.features.splash.ui.SplashPage
 import com.example.realstateblockchainapp.shared.navigation.navigate
 import com.example.realstateblockchainapp.shared.preferences.PRIVATE_WALLET_KEY
@@ -21,6 +22,7 @@ import com.example.realstateblockchainapp.shared.preferences.USER_EMAIL_KEY
 import com.example.realstateblockchainapp.shared.preferences.USER_NAME_KEY
 import com.example.realstateblockchainapp.shared.utils.NavConstants.HOME_PAGE
 import com.example.realstateblockchainapp.shared.utils.NavConstants.LOGIN_PAGE
+import com.example.realstateblockchainapp.shared.utils.NavConstants.NAVIGATION_PAGE
 import com.example.realstateblockchainapp.shared.utils.NavConstants.SPLASH_PAGE
 import com.example.realstateblockchainapp.shared.web3.Authenticator
 import com.example.realstateblockchainapp.ui.theme.RealStateBlockchainAppTheme
@@ -81,6 +83,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+
             RealStateBlockchainAppTheme {
                 NavHost(navController = navController, startDestination = SPLASH_PAGE) {
                     composable(SPLASH_PAGE) {
@@ -95,7 +98,7 @@ class MainActivity : ComponentActivity() {
                             navigate = navController::navigate
                         )
                     }
-                    composable(HOME_PAGE) { HomePage() }
+                    composable(NAVIGATION_PAGE) { NavigationPage() }
                 }
             }
         }

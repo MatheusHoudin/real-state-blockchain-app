@@ -74,6 +74,9 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0-alpha10")
     implementation("androidx.compose.material:material:1.5.4")
     implementation("androidx.navigation:navigation-compose:$navVersion")
+    val accompanist_version = "0.28.0"
+    implementation("com.google.accompanist:accompanist-pager:$accompanist_version") // Pager
+    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanist_version") // Pager Indicators
 
     // Web3
     implementation("com.github.Web3Auth:web3auth-android-sdk:4.0.3")

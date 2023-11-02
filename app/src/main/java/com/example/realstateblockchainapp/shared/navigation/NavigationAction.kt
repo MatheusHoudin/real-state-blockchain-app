@@ -7,7 +7,7 @@ sealed class NavigationAction(
     val route: String
 ) {
     object None : NavigationAction("")
-    object NavigateToHomePage : NavigationAction(NavConstants.HOME_PAGE)
+    object NavigateToNavigationPage : NavigationAction(NavConstants.NAVIGATION_PAGE)
 }
 
 fun NavHostController.navigate(action: NavigationAction) {
