@@ -4,6 +4,7 @@ import com.example.realstateblockchainapp.features.wallet.model.WalletDomainMode
 import com.example.realstateblockchainapp.shared.domain.BaseFlowableUseCase
 import com.example.realstateblockchainapp.shared.domain.Result
 import com.example.realstateblockchainapp.shared.repository.WalletRepository
+import com.example.realstateblockchainapp.shared.utils.convertWeiToEtherUnit
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +24,8 @@ class GetWalletUseCase(
                 nfts = walletResponse.nfts,
                 tokens = walletResponse.tokens.map {
                     it.copy(
-                        contractAddress = "https://sepolia.etherscan.io/address/${it.contractAddress}"
+                        contractAddress = "https://sepolia.etherscan.io/address/${it.contractAddress}",
+                        rawBalance = convertWeiToEtherUnit(it.rawBalance)
                     )
                 }
             )))

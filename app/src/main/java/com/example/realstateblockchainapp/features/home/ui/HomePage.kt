@@ -44,13 +44,13 @@ import androidx.compose.ui.window.Dialog
 import com.example.realstateblockchainapp.features.home.model.BuyCoinState
 import com.example.realstateblockchainapp.features.home.model.CoinDetailsDomainModel
 import com.example.realstateblockchainapp.features.home.viewmodel.HomeViewModel
+import com.example.realstateblockchainapp.shared.components.BuyCoinsDialog
 import com.example.realstateblockchainapp.shared.components.LoadingOrContent
 import com.example.realstateblockchainapp.shared.components.NftCard
 import com.example.realstateblockchainapp.shared.components.NftDetailsBottomSheet
 import com.example.realstateblockchainapp.shared.utils.openUrl
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomePage() {
 
@@ -204,99 +204,3 @@ fun HomePage() {
     }
 }
 
-@Composable
-private fun BuyCoinsDialog(
-    coinDetails: CoinDetailsDomainModel,
-    buyCoins: (String) -> Unit,
-    onChangeCoinsQuantity: (String) -> Unit,
-    buyCoinState: BuyCoinState,
-    onDismiss: () -> Unit,
-) {
-    Dialog(onDismissRequest = { onDismiss() }) {
-        var coinsQuantityText by remember { mutableStateOf("") }
-        Surface(
-            shape = RoundedCornerShape(8.dp),
-            color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.padding(8.dp)
-        ) {
-            LoadingOrContent(
-                isLoading = buyCoinState.buyCoinLoading,
-                modifier = Modifier.fillMaxWidth(),
-                progressColor = MaterialTheme.colorScheme.primary
-            ) {
-                if (buyCoinState.resultMessage.isNotEmpty()) {
-                    val context = LocalContext.current
-                    Button(
-                        onClick = {
-                            openUrl(context, buyCoinState.resultMessage)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        )
-                    ) {
-                        Text(
-                            text = "View transaction",
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                } else {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Available: ${coinDetails.availableTokenAmount} ${coinDetails.symbol}",
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 6.dp),
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        TextField(
-                            value = coinsQuantityText,
-                            placeholder = {
-                                Text("How many coins do you want?")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            onValueChange = { value ->
-                                coinsQuantityText = value
-                                onChangeCoinsQuantity(value)
-                            },
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = Color.Transparent,
-                                unfocusedContainerColor = Color.Transparent,
-                                disabledContainerColor = Color.Transparent,
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Buy cost: ${buyCoinState.valueInEth}",
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Button(
-                            onClick = {
-                                buyCoins(coinsQuantityText)
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary
-                            )
-                        ) {
-                            Text(
-                                text = "Buy Coins",
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}

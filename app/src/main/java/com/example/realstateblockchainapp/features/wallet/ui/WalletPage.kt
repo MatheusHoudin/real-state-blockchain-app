@@ -12,17 +12,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import com.example.realstateblockchainapp.features.wallet.viewmodel.WalletViewModel
 import com.example.realstateblockchainapp.features.wallet.viewmodel.tabs.NftTab
 import com.example.realstateblockchainapp.features.wallet.viewmodel.tabs.TokensTab
+import com.example.realstateblockchainapp.shared.components.BuyCoinsDialog
 import com.example.realstateblockchainapp.shared.components.LoadingOrContent
+import com.example.realstateblockchainapp.shared.components.NftDetailsBottomSheet
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -85,7 +83,24 @@ fun WalletPage() {
                     if (pagerState.currentPage == 0) {
                         TokensTab(tokens = state.value.tokens)
                     } else {
-                        NftTab(nfts = state.value.nfts)
+                        NftTab(nfts = state.value.nfts) { nftId ->
+                            walletVm.openNftDetails(nftId)
+                        }
+                    }
+                }
+                NftDetailsBottomSheet(state.value.nftDetails, walletVm::showBuyCoinDialog) {
+                    walletVm.onCloseNftDetails()
+                }
+                state.value.nftDetails?.coinDetails?.let { coinDetails ->
+                    state.value.buyCoinState?.let { buyCoinState ->
+                        BuyCoinsDialog(
+                            coinDetails = coinDetails,
+                            buyCoins = walletVm::buyCoins,
+                            onChangeCoinsQuantity = walletVm::onChangeCoinsQuantity,
+                            buyCoinState = buyCoinState
+                        ) {
+                            walletVm.hideBuyCoinDialog()
+                        }
                     }
                 }
             }

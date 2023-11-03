@@ -12,7 +12,10 @@ import com.example.realstateblockchainapp.shared.api.models.NftModel
 import com.example.realstateblockchainapp.shared.components.NftCard
 
 @Composable
-fun NftTab(nfts: List<NftModel>) {
+fun NftTab(
+    nfts: List<NftModel>,
+    openNftDetails: (String) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -24,7 +27,7 @@ fun NftTab(nfts: List<NftModel>) {
             }
             item {
                 NftCard(nft) {
-
+                    openNftDetails(it)
                 }
             }
         }

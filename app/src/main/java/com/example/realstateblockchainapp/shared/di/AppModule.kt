@@ -2,6 +2,7 @@ package com.example.realstateblockchainapp.shared.di
 
 import com.example.realstateblockchainapp.features.home.viewmodel.HomeViewModel
 import com.example.realstateblockchainapp.features.login.viewmodel.LoginViewModel
+import com.example.realstateblockchainapp.features.navigation.viewmodel.NavigationViewModel
 import com.example.realstateblockchainapp.features.wallet.viewmodel.WalletViewModel
 import com.example.realstateblockchainapp.shared.preferences.PreferencesRepository
 import com.example.realstateblockchainapp.shared.preferences.PreferencesRepositoryImpl
@@ -14,7 +15,14 @@ val appModule = module {
     single { Authenticator(androidContext()) }
     single<PreferencesRepository> { PreferencesRepositoryImpl(androidContext()) }
     viewModel { LoginViewModel(preferencesRepository = get()) }
-    viewModel { WalletViewModel(getWalletUseCase = get()) }
+    viewModel { NavigationViewModel() }
+    viewModel {
+        WalletViewModel(
+            getWalletUseCase = get(),
+            getNftDetailsUseCase = get(),
+            buyCoinsUseCase = get()
+        )
+    }
     viewModel {
         HomeViewModel(
             homeUseCase = get(),

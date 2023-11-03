@@ -25,9 +25,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.realstateblockchainapp.shared.api.models.CoinModel
+import com.example.realstateblockchainapp.shared.utils.openUrl
 
 @Composable
 fun TokensTab(tokens: List<CoinModel>) {
@@ -48,6 +50,7 @@ fun TokensTab(tokens: List<CoinModel>) {
 
 @Composable
 private fun TokenCard(tokenModel: CoinModel) {
+    val context = LocalContext.current
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
@@ -55,7 +58,9 @@ private fun TokenCard(tokenModel: CoinModel) {
         ),
         modifier = Modifier.padding(
             horizontal = 18.dp
-        ).clickable {  }
+        ).clickable {
+            openUrl(context, tokenModel.contractAddress)
+        }
     ) {
         Row(
             modifier = Modifier.fillMaxSize().padding(8.dp)

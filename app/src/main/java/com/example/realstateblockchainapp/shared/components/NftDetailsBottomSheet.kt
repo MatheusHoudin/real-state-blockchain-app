@@ -39,6 +39,7 @@ fun NftDetailsBottomSheet(
 ) {
     model?.let {
         val sheetState = rememberModalBottomSheetState()
+
         LaunchedEffect("") {
             sheetState.expand()
         }
