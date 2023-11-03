@@ -1,13 +1,17 @@
 package com.example.realstateblockchainapp.features.wallet.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -15,11 +19,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import com.example.realstateblockchainapp.features.wallet.viewmodel.WalletViewModel
+import com.example.realstateblockchainapp.features.wallet.viewmodel.tabs.NftTab
+import com.example.realstateblockchainapp.features.wallet.viewmodel.tabs.TokensTab
+import com.example.realstateblockchainapp.shared.components.LoadingOrContent
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -29,40 +38,60 @@ fun WalletPage() {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier.fillMaxSize()
+    val walletVm = koinViewModel<WalletViewModel>()
+    val state = walletVm.walletState.collectAsState()
+
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.primary,
     ) {
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.SecondaryIndicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            },
-            backgroundColor = MaterialTheme.colorScheme.onPrimary
+        LoadingOrContent(
+            isLoading = state.value.isLoading,
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primary)
         ) {
-            tabs.forEachIndexed { index, value ->
-                Tab(
-                    selected = pagerState.currentPage == index,
-                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-                    text = {
-                        TabItem(tabValue = value, isSelected = pagerState.currentPage == index)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.SecondaryIndicator(
+                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    },
+                    backgroundColor = MaterialTheme.colorScheme.onPrimary
+                ) {
+                    tabs.forEachIndexed { index, value ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                            text = {
+                                TabItem(tabValue = value, isSelected = pagerState.currentPage == index)
+                            }
+                        )
                     }
-                )
-            }
-        }
-        HorizontalPager(
-            count = tabs.size,
-            state = pagerState,
-        ) {
-            if (pagerState.currentPage == 0) {
-                Text(text = "Coins")
-            } else {
-                Text(text = "NFT")
+                }
+                HorizontalPager(
+                    count = tabs.size,
+                    state = pagerState,
+                ) {
+                    if (pagerState.currentPage == 0) {
+                        TokensTab(tokens = state.value.tokens)
+                    } else {
+                        NftTab(nfts = state.value.nfts)
+                    }
+                }
             }
         }
     }
+
 }
 
 @Composable

@@ -1,7 +1,16 @@
 package com.example.realstateblockchainapp.shared.utils
 
-import java.math.BigDecimal
-import java.math.BigInteger
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+
+fun openUrl(context: Context, url: String) {
+    val urlIntent = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse(url)
+    )
+    context.startActivity(urlIntent)
+}
 
 fun convertWeiToEtherUnit(valueInWei: String): String {
     val wei = valueInWei.toDoubleOrNull()
