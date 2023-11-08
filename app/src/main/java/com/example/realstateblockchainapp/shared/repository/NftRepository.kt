@@ -1,6 +1,8 @@
 package com.example.realstateblockchainapp.shared.repository
 
+import com.example.realstateblockchainapp.features.navigation.model.CreateNftRequest
 import com.example.realstateblockchainapp.shared.api.NFTApi
+import com.example.realstateblockchainapp.shared.api.models.GenericTransactionResponse
 import com.example.realstateblockchainapp.shared.api.models.NftDetailsModel
 import com.example.realstateblockchainapp.shared.api.models.NftModel
 import com.example.realstateblockchainapp.shared.api.models.RealStateNft
@@ -22,5 +24,11 @@ class NftRepository(
         nftApi.getNFTDetails(
             privateKey = preferencesRepository.getString(PRIVATE_WALLET_KEY).orEmpty(),
             nftId = nftId
+        )
+
+    suspend fun createNft(request: CreateNftRequest): GenericTransactionResponse =
+        nftApi.createNft(
+            privateKey = preferencesRepository.getString(PRIVATE_WALLET_KEY).orEmpty(),
+            request = request
         )
 }

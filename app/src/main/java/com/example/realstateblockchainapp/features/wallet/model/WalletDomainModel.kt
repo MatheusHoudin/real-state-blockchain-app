@@ -10,5 +10,7 @@ data class WalletDomainModel(
     val nfts: List<NftModel> = emptyList(),
     val tokens: List<CoinModel> = emptyList(),
     val nftDetails: NftDetailsDomainModel? = null,
-    val buyCoinState: BuyCoinState? = null
+    val buyCoinState: BuyCoinState? = null,
+    val isAddingClientToProperty: Boolean = false,
+    val addClientPropertyHash: String? = null
 )

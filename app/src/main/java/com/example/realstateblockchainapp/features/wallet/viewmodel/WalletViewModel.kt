@@ -6,9 +6,11 @@ import com.example.realstateblockchainapp.features.home.domain.GetNftDetailsUseC
 import com.example.realstateblockchainapp.features.home.model.BuyCoinState
 import com.example.realstateblockchainapp.features.home.model.NftDetailsDomainModel
 import com.example.realstateblockchainapp.features.wallet.domain.GetWalletUseCase
+import com.example.realstateblockchainapp.features.wallet.domain.SetPropertyClientUseCase
 import com.example.realstateblockchainapp.features.wallet.model.WalletDomainModel
 import com.example.realstateblockchainapp.shared.BaseViewModel
 import com.example.realstateblockchainapp.shared.api.models.BuyCoinsRequest
+import com.example.realstateblockchainapp.shared.api.models.SetPropertyClientModel
 import com.example.realstateblockchainapp.shared.domain.Result
 import com.example.realstateblockchainapp.shared.utils.AppConstants
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +22,8 @@ import kotlinx.coroutines.launch
 class WalletViewModel(
     private val getWalletUseCase: GetWalletUseCase,
     private val getNftDetailsUseCase: GetNftDetailsUseCase,
-    private val buyCoinsUseCase: BuyCoinsUseCase
+    private val buyCoinsUseCase: BuyCoinsUseCase,
+    private val setPropertyClientUseCase: SetPropertyClientUseCase,
 ) : BaseViewModel() {
 
     private val _walletState: MutableStateFlow<WalletDomainModel> =
@@ -31,6 +34,33 @@ class WalletViewModel(
         getWalletData()
     }
 
+    fun setPropertyClient(model: SetPropertyClientModel) {
+        viewModelScope.launch {
+            setPropertyClientUseCase.execute(model).collectLatest { result ->
+                when (result) {
+                    is Result.Loading -> {
+                        _walletState.value = _walletState.value.copy(
+                            isAddingClientToProperty = true
+                        )
+                    }
+
+                    is Result.Success -> {
+                        _walletState.value = _walletState.value.copy(
+                            isAddingClientToProperty = false,
+                            addClientPropertyHash = "https://sepolia.etherscan.io/tx/${result.data.hash}"
+                        )
+                    }
+
+                    is Result.Error -> {
+                        _walletState.value = _walletState.value.copy(
+                            isAddingClientToProperty = false
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     private fun getWalletData() {
         viewModelScope.launch {
             getWalletUseCase.execute(Unit).collectLatest { result ->
@@ -38,6 +68,7 @@ class WalletViewModel(
                     is Result.Loading -> {
                         showLoading()
                     }
+
                     is Result.Success -> {
                         onSuccess(result.data)
                     }
@@ -96,6 +127,7 @@ class WalletViewModel(
                                 )
                             )
                         }
+
                         is Result.Success -> {
                             _walletState.value = _walletState.value.copy(
                                 buyCoinState = _walletState.value.buyCoinState?.copy(
@@ -104,6 +136,7 @@ class WalletViewModel(
                                 )
                             )
                         }
+
                         is Result.Error -> {
                             _walletState.value = _walletState.value.copy(
                                 buyCoinState = _walletState.value.buyCoinState?.copy(
@@ -123,7 +156,7 @@ class WalletViewModel(
                 when (result) {
                     is Result.Loading -> {
                         _walletState.value = _walletState.value.copy(
-                            nftDetails = NftDetailsDomainModel(isLoading = true)
+                            nftDetails = NftDetailsDomainModel(isLoading = true, isOwner = true)
                         )
                     }
 
@@ -135,7 +168,7 @@ class WalletViewModel(
 
                     is Result.Error -> {
                         _walletState.value = _walletState.value.copy(
-                            nftDetails = NftDetailsDomainModel(isLoading = false)
+                            nftDetails = NftDetailsDomainModel(isLoading = false, isOwner = true)
                         )
                     }
                 }

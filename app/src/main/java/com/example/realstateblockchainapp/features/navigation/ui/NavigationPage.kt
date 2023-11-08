@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,6 +45,7 @@ import com.example.realstateblockchainapp.features.home.ui.HomePage
 import com.example.realstateblockchainapp.features.navigation.model.CreateNftRequest
 import com.example.realstateblockchainapp.features.navigation.viewmodel.NavigationViewModel
 import com.example.realstateblockchainapp.features.wallet.ui.WalletPage
+import com.example.realstateblockchainapp.shared.components.LoadingOrContent
 import com.example.realstateblockchainapp.shared.utils.NavConstants
 import com.example.realstateblockchainapp.shared.utils.openUrl
 import org.koin.androidx.compose.koinViewModel
@@ -117,7 +119,12 @@ fun NavigationPage() {
                 }
             }
             if (state.value.showCreateNftDialog) {
-                CreateNftBottomSheet(sheetState, navigationVm::createNft) {
+                CreateNftBottomSheet(
+                    sheetState,
+                    state.value.isCreatingNft,
+                    state.value.createNftHash,
+                    navigationVm::createNft
+                ) {
                     navigationVm.hideCreateNftDialog()
                 }
             }
@@ -129,6 +136,8 @@ fun NavigationPage() {
 @Composable
 private fun CreateNftBottomSheet(
     sheetState: SheetState,
+    isCreatingNft: Boolean,
+    nftHashResult: String?,
     createNft: (CreateNftRequest) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -142,68 +151,101 @@ private fun CreateNftBottomSheet(
         sheetState.expand()
     }
 
+    val context = LocalContext.current
+
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
         sheetState = sheetState,
-    ) {
-        Text(
-            text = "NFT Price: 0.05 ETH",
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        CreateNftText(
-            label = "Nft Uri",
-            value = nftDataUri.value
-        ) { nftDataUri.value = it }
-        Spacer(modifier = Modifier.height(12.dp))
-        CreateNftText(
-            label = "Coin Name",
-            value = coinName.value
-        ) { coinName.value = it }
-        Spacer(modifier = Modifier.height(12.dp))
-        CreateNftText(
-            label = "Coin Symbol",
-            value = coinSymbol.value
-        ) { coinSymbol.value = it }
-        Spacer(modifier = Modifier.height(12.dp))
-        CreateNftText(
-            label = "Initial Supply",
-            value = initialSupply.value,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        ) { initialSupply.value = it }
-        Spacer(modifier = Modifier.height(12.dp))
-        CreateNftText(
-            label = "Locked Amount",
-            value = lockedAmount.value,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        ) { lockedAmount.value = it }
-        Spacer(modifier = Modifier.height(12.dp))
-        Button(
-            onClick = {
-                createNft(
-                    CreateNftRequest(
-                        nftUri = nftDataUri.value,
-                        coinName = coinName.value,
-                        coinSymbol = coinSymbol.value,
-                        initialSupply = initialSupply.value,
-                        lockedAmount = lockedAmount.value
-                    )
-                )
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 22.dp)
+
         ) {
-            Text(
-                text = "Create NFT",
-                color = MaterialTheme.colorScheme.onPrimary
-            )
+        LoadingOrContent(
+            isLoading = isCreatingNft,
+            modifier = Modifier
+                .fillMaxWidth(),
+            progressColor = MaterialTheme.colorScheme.primary
+        ) {
+            nftHashResult?.let {
+                Button(
+                    onClick = {
+                        openUrl(context, it)
+                        onDismiss()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 22.dp)
+                ) {
+                    Text(
+                        text = "View Transaction",
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            } ?: kotlin.run {
+                Text(
+                    text = "NFT Price: 0.05 ETH",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                CreateNftText(
+                    label = "Nft Uri",
+                    value = nftDataUri.value
+                ) { nftDataUri.value = it }
+                Spacer(modifier = Modifier.height(12.dp))
+                CreateNftText(
+                    label = "Coin Name",
+                    value = coinName.value
+                ) { coinName.value = it }
+                Spacer(modifier = Modifier.height(12.dp))
+                CreateNftText(
+                    label = "Coin Symbol",
+                    value = coinSymbol.value
+                ) { coinSymbol.value = it }
+                Spacer(modifier = Modifier.height(12.dp))
+                CreateNftText(
+                    label = "Initial Supply",
+                    value = initialSupply.value,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                ) { initialSupply.value = it }
+                Spacer(modifier = Modifier.height(12.dp))
+                CreateNftText(
+                    label = "Locked Amount",
+                    value = lockedAmount.value,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                ) { lockedAmount.value = it }
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    onClick = {
+                        createNft(
+                            CreateNftRequest(
+                                uri = nftDataUri.value,
+                                coinName = coinName.value,
+                                coinSymbol = coinSymbol.value,
+                                initialSupply = initialSupply.value,
+                                lockedAmount = lockedAmount.value
+                            )
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 22.dp)
+                ) {
+                    Text(
+                        text = "Create NFT",
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+
         }
-        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 

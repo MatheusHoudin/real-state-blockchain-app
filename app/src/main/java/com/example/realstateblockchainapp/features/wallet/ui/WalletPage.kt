@@ -88,7 +88,13 @@ fun WalletPage() {
                         }
                     }
                 }
-                NftDetailsBottomSheet(state.value.nftDetails, walletVm::showBuyCoinDialog) {
+                NftDetailsBottomSheet(
+                    state.value.nftDetails,
+                    walletVm::showBuyCoinDialog,
+                    walletVm::setPropertyClient,
+                    setPropertyClientHash = state.value.addClientPropertyHash,
+                    isSetPropertyClientLoading = state.value.isAddingClientToProperty
+                ) {
                     walletVm.onCloseNftDetails()
                 }
                 state.value.nftDetails?.coinDetails?.let { coinDetails ->
@@ -106,7 +112,6 @@ fun WalletPage() {
             }
         }
     }
-
 }
 
 @Composable

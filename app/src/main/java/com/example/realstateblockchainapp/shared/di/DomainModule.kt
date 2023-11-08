@@ -5,7 +5,9 @@ import com.example.realstateblockchainapp.features.home.domain.GetNftDetailsUseC
 import com.example.realstateblockchainapp.features.home.domain.HomeUseCase
 import com.example.realstateblockchainapp.features.home.mapper.HomeNftMapper
 import com.example.realstateblockchainapp.features.home.mapper.NftDetailsMapper
+import com.example.realstateblockchainapp.features.navigation.domain.CreateNftUseCase
 import com.example.realstateblockchainapp.features.wallet.domain.GetWalletUseCase
+import com.example.realstateblockchainapp.features.wallet.domain.SetPropertyClientUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
@@ -25,6 +27,12 @@ val domainModule = module {
         coinRepository = get(),
     ) }
     factory { GetWalletUseCase(
+        repository = get(),
+    ) }
+    factory { CreateNftUseCase(
+        repository = get(),
+    ) }
+    factory { SetPropertyClientUseCase(
         repository = get(),
     ) }
 }

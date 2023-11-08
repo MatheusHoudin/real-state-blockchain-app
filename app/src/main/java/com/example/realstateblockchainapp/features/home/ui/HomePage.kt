@@ -184,7 +184,7 @@ fun HomePage() {
                         }
                     }
                 }
-                NftDetailsBottomSheet(state.value.nftDetails, homeVm::showBuyCoinDialog) {
+                NftDetailsBottomSheet(state.value.nftDetails, homeVm::showBuyCoinDialog, {}) {
                     homeVm.onCloseNftDetails()
                 }
                 state.value.nftDetails?.coinDetails?.let { coinDetails ->

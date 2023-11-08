@@ -9,7 +9,8 @@ data class NftDetailsDomainModel(
     val coinAddress: String = "",
     val propertyClient: PropertyClient? = null,
     val metadata: NftMetadata? = null,
-    val coinDetails: CoinDetailsDomainModel? = null
+    val coinDetails: CoinDetailsDomainModel? = null,
+    val isOwner: Boolean = false
 )
 
 data class CoinDetailsDomainModel(
