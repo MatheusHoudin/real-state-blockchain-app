@@ -12,8 +12,13 @@ fun openUrl(context: Context, url: String) {
     context.startActivity(urlIntent)
 }
 
-fun convertWeiToEtherUnit(valueInWei: String): String {
-    val wei = valueInWei.toDoubleOrNull()
+fun convertWeiToEtherUnit(valueInWei: String, shouldRemove: Boolean = false): String {
+    val wei: Double
+    if (shouldRemove) {
+        wei = valueInWei.substring(0, valueInWei.length - 18).toDouble()
+    } else {
+        wei = valueInWei.toDouble()
+    }
     return wei?.let { value ->
         (value / DECIMALS).toString()
     } ?: "0"

@@ -25,7 +25,7 @@ class GetWalletUseCase(
                 tokens = walletResponse.tokens.map {
                     it.copy(
                         contractAddress = "https://sepolia.etherscan.io/address/${it.contractAddress}",
-                        rawBalance = convertWeiToEtherUnit(it.rawBalance)
+                        rawBalance = convertWeiToEtherUnit(it.balance)
                     )
                 }
             )))

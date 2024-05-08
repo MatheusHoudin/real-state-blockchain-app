@@ -184,7 +184,7 @@ private fun CreateNftBottomSheet(
                 }
             } ?: kotlin.run {
                 Text(
-                    text = "NFT Price: 0.05 ETH",
+                    text = "NFT Price: 0.02 ETH",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.fillMaxWidth(),

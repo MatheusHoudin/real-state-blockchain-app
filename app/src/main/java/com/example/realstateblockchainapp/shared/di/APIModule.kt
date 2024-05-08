@@ -20,7 +20,7 @@ val networkModule = module {
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder().baseUrl("http://192.168.1.112:3000/").client(okHttpClient)
+    return Retrofit.Builder().baseUrl("http://192.168.1.108:3000/").client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create()).build()
 }
 

@@ -20,10 +20,10 @@ class NftDetailsMapper : IMapper<FullNftDetailsModel, NftDetailsDomainModel> {
             address = "https://sepolia.etherscan.io/address/${data.coinDetails.address}",
             name = data.coinDetails.name,
             symbol = data.coinDetails.symbol,
-            totalSupply = convertWeiToEtherUnit(data.coinDetails.totalSupply),
-            lockedAmount = convertWeiToEtherUnit(data.coinDetails.lockedAmount),
-            availableTokenAmount = convertWeiToEtherUnit(data.coinDetails.availableTokenAmount),
-            totalRentIncomeReceived = convertWeiToEtherUnit(data.coinDetails.totalRentIncomeReceived),
+            totalSupply = convertWeiToEtherUnit(data.coinDetails.totalSupply, true),
+            lockedAmount = convertWeiToEtherUnit(data.coinDetails.lockedAmount, true),
+            availableTokenAmount = convertWeiToEtherUnit(data.coinDetails.availableTokenAmount, true),
+            totalRentIncomeReceived = convertWeiToEtherUnit(data.coinDetails.totalRentIncomeReceived, false),
         )
     )
 }
